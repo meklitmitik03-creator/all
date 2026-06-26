@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Dashboard</title>
+    <link rel="stylesheet" href="home-style.css">
+</head>
+<body>
+
+    <nav class="side-nav minimized" id="sidebar-menu">
+        <div class="toggle-sidebar-btn" onclick="toggleSidebar()">☰</div>
+        <div class="nav-links">
+            <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">Home</span></div>
+            <div class="nav-item" onclick="alert('Opening Medication View...')"><span class="nav-icon">💊</span><span class="nav-text">Medicine</span></div>
+            <div class="nav-item" onclick="alert('Opening Health Logs...')"><span class="nav-icon">❤️</span><span class="nav-text">Health</span></div>
+            <div class="nav-item" onclick="toggleSettings()"><span class="nav-icon">👤</span><span class="nav-text">Profile</span></div>
+        </div>
+    </nav>
+
+    <div class="app-container" id="app-container">
+        <div class="hero-section">
+            <header class="app-header">
+                <div class="header-left-space"></div>
+                <div class="header-title">
+                    <h1>Merry</h1>
+                    <p>Your Health, Our Priority</p>
+                </div>
+                <div class="header-icons">
+                    <div class="icon-badge" onclick="toggleNotifications(event)">🔔<span class="badge" id="notif-badge">2</span></div>
+                    <div class="icon-setting" onclick="toggleSettings()">⚙️</div>
+                </div>
+            </header>
+
+            <div class="welcome-card">
+                <div class="welcome-text">
+                    <h2>Good Morning! 👋</h2>
+                    <p>Take care of yourself today.</p>
+                    <strong>You are important!</strong>
+                </div>
+                <div class="welcome-graphic">
+                    <div class="heart-avatar">💙</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="features-grid">
+                <div class="grid-card" onclick="alert('Opening Medicine Reminders! (We will build this later)')">
+                    <div class="card-icon icon-purple">💊</div>
+                    <div class="card-info">
+                        <h3>Medicine Reminder</h3>
+                        <p>Set reminders and never miss a dose</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+
+                <div class="grid-card" onclick="alert('Opening Relaxation Center! (We will build this later)')">
+                    <div class="card-icon icon-green">🧘‍♂️</div>
+                    <div class="card-info">
+                        <h3>Relaxation Center</h3>
+                        <p>Calm your mind, relax your body</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+
+                <div class="grid-card" onclick="alert('Opening Games Zone! (We will build this later)')">
+                    <div class="card-icon icon-yellow">🎮</div>
+                    <div class="card-info">
+                        <h3>Games Zone</h3>
+                        <p>Play games and boost your mood</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+
+                <div class="grid-card" onclick="alert('Opening Mood Tracker! (We will build this later)')">
+                    <div class="card-icon icon-pink">😊</div>
+                    <div class="card-info">
+                        <h3>Mood Tracker</h3>
+                        <p>Track your mood and feelings</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+
+                <div class="grid-card" onclick="alert('Opening Daily Schedule! (We will build this later)')">
+                    <div class="card-icon icon-orange">📅</div>
+                    <div class="card-info">
+                        <h3>Daily Schedule</h3>
+                        <p>View your tasks and routines</p>
+                    </div>
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-floating-wrapper">
+        <div class="ai-chat-window hidden" id="ai-chat-box">
+            <div class="ai-chat-header">
+                <div class="ai-status-dot">🤖</div>
+                <div>
+                    <h4>Merry AI Companion</h4>
+                    <p>Online & Ready to chat</p>
+                </div>
+                <span class="close-chat" onclick="toggleAiChat()">&times;</span>
+            </div>
+            <div class="ai-chat-messages">
+                <div class="msg ai-msg">Hello! I am Merry, your virtual assistant. How are you feeling today? 💙</div>
+            </div>
+            <div class="ai-chat-input-area">
+                <input type="text" placeholder="Type a message...">
+                <button onclick="alert('Sending messages will be wired next!')">Send</button>
+            </div>
+        </div>
+        <div class="ai-floating-btn" onclick="toggleAiChat()">🤖</div>
+    </div>
+
+    <div id="alarm-alert-modal" class="modal-overlay alarm-style hidden">
+        <div class="modal-content urgent-card">
+            <div class="alarm-animation-icon">🔔</div>
+            <h2>Time for your Medicine!</h2>
+            <h3 id="alarm-med-name">Medicine Name</h3>
+            <p id="alarm-med-time">Scheduled Time: 00:00</p>
+            
+            <div class="alarm-action-buttons">
+                <button class="take-med-btn" onclick="dismissAlarm(document.getElementById('alarm-med-name').innerText)">💊 I Have Taken It</button>
+                <button class="snooze-med-btn" onclick="snoozeAlarm()">⏰ Snooze Alarm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-dropdown" class="dropdown-box hidden">
+        <div class="dropdown-header">
+            <h4>Notifications</h4>
+            <button onclick="clearNotifications()">Clear All</button>
+        </div>
+        <div class="dropdown-item active-item">⚠️ Reminder: Take Paracetamol at 12:05 PM</div>
+        <div class="dropdown-item active-item">✨ Great job! Your buddy is happy today.</div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>App Settings & Profile</h3>
+                <span class="close-btn" onclick="toggleSettings()">&times;</span>
+            </div>
+            <div class="modal-body">
+                
+                <div class="settings-group">
+                    <h4>👤 Profile & Appearance</h4>
+                    <div class="setting-row">
+                        <label>Profile Name</label>
+                        <input type="text" value="Champion">
+                    </div>
+                    <div class="setting-row">
+                        <label>Language</label>
+                        <select>
+                            <option>English</option>
+                            <option>Español</option>
+                            <option>Français</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>Dark Mode 🌙</label>
+                        <input type="checkbox" id="dark-mode-toggle" onchange="applyDarkMode()">
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4>⚙️ Accessibility & Sound</h4>
+                    <div class="setting-row">
+                        <label>Text-to-Speech (🔊)</label>
+                        <input type="checkbox" id="settings-tts">
+                    </div>
+                    <div class="setting-row">
+                        <label>Vibration (📳)</label>
+                        <input type="checkbox" id="settings-vib" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label>Large Text Mode (🔤)</label>
+                        <input type="checkbox" id="settings-large" onchange="toggleAccessibilityClass('large')">
+                    </div>
+                    <div class="setting-row">
+                        <label>High Contrast Mode (🎨)</label>
+                        <input type="checkbox" id="settings-contrast" onchange="toggleAccessibilityClass('contrast')">
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4>⏰ Medicine Alarms Configuration</h4>
+                    <div class="setting-row">
+                        <label>Default Reminder Sound</label>
+                        <select id="settings-sound-select">
+                            <option value="chime">Chime Echo</option>
+                            <option value="piano">Soft Piano</option>
+                            <option value="beep">Digital Beep</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>Snooze Duration</label>
+                        <select id="settings-snooze-select">
+                            <option value="5">5 Minutes</option>
+                            <option value="10">10 Minutes</option>
+                            <option value="15">15 Minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4>ℹ️ Info & Support</h4>
+                    <div class="info-links">
+                        <p onclick="alert('Help center online.')">Help & Support</p>
+                    </div>
+                </div>
+
+                <button class="logout-btn" onclick="logoutAction()">Log Out Account</button>
+                <button class="save-settings-btn" onclick="saveSettingsAction()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="home-script.js"></script>
+</body>
+</html>
