@@ -19,12 +19,12 @@ body {
     top: 0;
     left: 0;
     height: 100vh;
-    background: rgb(136, 55, 55);
+    background: rgb(83, 31, 31);
     box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-    z-index: 150;
+    z-index: 100;
     display: flex;
     flex-direction: column;
-    padding: 20px 10px;
+    padding: 10px;
     width: 240px;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -94,7 +94,7 @@ body {
 
 /* Top Banner Block */
 .hero-section {
-    background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
+    background: linear-gradient(180deg, #1a56d8 0%, #3b82f6 100%);
     padding: 30px 40px 50px 40px;
     border-bottom-left-radius: 32px;
     border-bottom-right-radius: 32px;
@@ -127,7 +127,7 @@ body {
 
 .welcome-text h2 { font-size: 1.6rem; margin-bottom: 6px; }
 .welcome-text p { font-size: 1rem; color: #64748b; }
-.welcome-text strong { font-size: 1rem; color: #2563eb; display:block; margin-top: 6px;}
+.welcome-text strong { font-size: 1rem; color: #195ae7; display:block; margin-top: 6px;}
 .heart-avatar { font-size: 4rem; animation: pulse 2s infinite ease-in-out; }
 
 @keyframes pulse {
