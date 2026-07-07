@@ -109,7 +109,8 @@ body {
    ========================================================================== */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    /* Updated with responsive min() function to prevent ultra-mobile overflow */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 24px;
 }
 
@@ -294,8 +295,17 @@ body {
 /* ==========================================================================
    12. NEW SPECIFIC NODES: MOOD LOG HOVER RESPONSES
    ========================================================================== */
+.mood-node {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
 .mood-node:hover {
     transform: scale(1.25);
+}
+
+.mood-node:active {
+    transform: scale(1.25);
+    opacity: 0.6;
 }
 
 @keyframes wobble {
@@ -340,8 +350,24 @@ body {
 .dark-theme .dropdown-header { color: white; }
 .dark-theme .game-menu-item { background-color: #1e293b; border-color: #334155; }
 .dark-theme .game-item-info p { color: #94a3b8; }
+
+/* Dark Theme Specificity Extension */
+.dark-theme .wordle-letter.correct-position {
+    border-color: #3b82f6;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
 /* Fade effect transition classes when actions clear nodes from view stack */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   14. MOBILE LAYOUT OVERRIDES (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .standard-margin {
+        padding: 15px;
+    }
 }

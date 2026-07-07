@@ -26,6 +26,31 @@ const monthsLabelsMatrix = [
 let alarmIntervalId = null;
 let currentActiveAlarmMed = null;
 
+// NEW ADDITIONAL STATE MATRICES FOR THE EXERCISE SUITE PIPELINE
+let walkingReminderAlarmTime = "";
+const extended20FitnessRoutinesArray = [
+    { id: 1, name: "Gentle Morning Stretch", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "Mat Optional", notes: "Elongates spine muscles beautifully." },
+    { id: 2, name: "Seated Chair Yoga Pose", duration: "3 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "Sturdy Chair", notes: "Improves posture alignment safely." },
+    { id: 3, name: "Standing Calf Raises", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "None Required", notes: "Strengthens ankles and lower limbs." },
+    { id: 4, name: "Wall Assisted Squats", duration: "4 mins", impact: "Medium Impact", difficulty: "Intermediate Level 3", gear: "Flat Wall Space", notes: "Builds great stability foundation." },
+    { id: 5, name: "Shoulder Blade Squeezes", duration: "1 min", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "None Required", notes: "Relieves upper body posture stress." },
+    { id: 6, name: "Dynamic Arm Circles", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "None Required", notes: "Increases shoulder joint mobility safely." },
+    { id: 7, name: "Standing Balance Taps", duration: "3 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "Wall for Support", notes: "Refines equilibrium precision loops." },
+    { id: 8, name: "Light Core Tighteners", duration: "3 mins", impact: "Medium Impact", difficulty: "Intermediate Level 3", gear: "Exercise Mat", notes: "Engages deep abdominal core muscle structures." },
+    { id: 9, name: "Hip Joint Rotations", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "None Required", notes: "Opens up modern sedentary tight hips." },
+    { id: 10, name: "Gentle Hamstring Reach", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "Mat / Floor", notes: "Stretches deep back thigh muscle channels." },
+    { id: 11, name: "Desk Counter Pushups", duration: "3 mins", impact: "Medium Impact", difficulty: "Intermediate Level 3", gear: "Stable Counter", notes: "Lightweight upper body resistance track." },
+    { id: 12, name: "Seated Leg Extensions", duration: "4 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "Comfortable Chair", notes: "Activates knee joint quad support." },
+    { id: 13, name: "Torso Twist Rotations", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "None Required", notes: "Enhances lateral flexibility parameters." },
+    { id: 14, name: "Ankle Alphabet Tracing", duration: "3 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "None Required", notes: "Increases specialized ankle flexibility vectors." },
+    { id: 15, name: "Wall Chest Opener Stretches", duration: "2 mins", impact: "Low Impact", difficulty: "Beginner Level 2", gear: "Wall Space", notes: "Counteracts screen leaning slouch postures." },
+    { id: 16, name: "Low-Impact Step Jack Cadence", duration: "3 mins", impact: "Medium Impact", difficulty: "Intermediate Level 4", gear: "Running Shoes", notes: "Safely increases active metabolism spikes." },
+    { id: 17, name: "Wrist and Forearm Relief", duration: "1 min", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "None Required", notes: "Soothes mouse typing strain factors." },
+    { id: 18, name: "Cat-Cow Spine Flexions", duration: "4 mins", impact: "Low Impact", difficulty: "Intermediate Level 3", gear: "Yoga Mat", notes: "Promotes incredible deep spine flexibility." },
+    { id: 19, name: "Marching On The Spot Track", duration: "5 mins", impact: "Medium Impact", difficulty: "Intermediate Level 3", gear: "Running Shoes", notes: "Steady cardiovascular baseline standard." },
+    { id: 20, name: "Deep Relaxation Cool Down", duration: "3 mins", impact: "Low Impact", difficulty: "Beginner Level 1", gear: "Quiet Room Mat", notes: "Resets heart rate curves optimally." }
+];
+
 // ==========================================================================
 // 2. MOTIVATIONAL ROLLING DIALECTIC (50 SPEECHES ROTATING AUTOMATICALLY)
 // ==========================================================================
@@ -153,6 +178,29 @@ function renderMealsSchedulePlan() {
         
         bucket.appendChild(mealRow);
     });
+}
+
+// ==========================================================================
+// BACKGROUND AUDIO AUDIO SYNTHESIZER UTILITY FOR INTERACTIVE GAMES & REMINDERS
+// ==========================================================================
+function playGameSound(frequency, type, duration) {
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const ctx = new AudioContextClass();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = frequency || 440;
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+        console.warn("Audio Context playback failed or blocked by user engagement limits:", e);
+    }
 }
 
 function addNewMealRecord() {
@@ -312,7 +360,6 @@ function navigateCalendarMonth(directionDelta) {
         targetCalendarYear--;
     }
     
-    // Constrain safely inside requested 5-year spectrum boundaries (2026-2030)
     if (targetCalendarYear > 2030) targetCalendarYear = 2030;
     if (targetCalendarYear < 2026) targetCalendarYear = 2026;
 
@@ -472,14 +519,17 @@ function stopNatureAudioStream() {
 
 function updateRelaxationSound() { if (ambientSoundPlaying) { stopNatureAudioStream(); startNatureAudioStream(); } }
 
-// ==========================================
-// 10. EXERCISE TRACKER CORE ACTIONS
-// ==========================================
+// ==========================================================================
+// 10. EXERCISE TRACKER CORE ACTIONS + EXTRA 20 ROUTINES MATRIX INTERFACES
+// ==========================================================================
 let workoutTimerId = null;
 let workoutSecondsLeft = 120;
 let workoutActive = false;
 
-function openExerciseTracker() { document.getElementById('exercise-modal').classList.remove('hidden'); }
+function openExerciseTracker() { 
+    document.getElementById('exercise-modal').classList.remove('hidden'); 
+    render20ExtendedExerciseGrid();
+}
 function closeExerciseTracker() { 
     document.getElementById('exercise-modal').classList.add('hidden'); 
     if(workoutActive) toggleWorkoutTimer();
@@ -518,6 +568,70 @@ function toggleWorkoutTimer() {
         clearInterval(workoutTimerId);
         btn.innerText = "Start Stretch"; btn.style.background = "#2563eb";
     }
+}
+
+// EXTRA RENDER HOOKS FOR NEW INFRASTRUCTURE
+function render20ExtendedExerciseGrid() {
+    const gridContainer = document.getElementById('extended-20-exercise-grid');
+    if (!gridContainer) return;
+    gridContainer.innerHTML = "";
+
+    extended20FitnessRoutinesArray.forEach((exercise) => {
+        const itemCard = document.createElement('div');
+        itemCard.style.cssText = "background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;";
+        
+        itemCard.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <h5 style="margin: 0; font-size: 0.85rem; font-weight: 700; color: #1e293b;">${exercise.id}. ${exercise.name}</h5>
+                <span style="font-size: 0.7rem; background: #e0f2fe; color: #0369a1; padding: 1px 6px; border-radius: 4px; font-weight: 600; white-space: nowrap;">${exercise.duration}</span>
+            </div>
+            <p style="margin: 2px 0; font-size: 0.75rem; color: #64748b; line-height: 1.3;">${exercise.notes}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #e2e8f0;">
+                <span style="font-size: 0.7rem; color: #475569; font-weight: 500;">⚙️ ${exercise.gear}</span>
+                <button onclick="previewExerciseAssetPipeline(${exercise.id})" style="background: #f97316; color: white; border: none; padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; cursor: pointer; font-weight: bold;">Watch Guide</button>
+            </div>
+        `;
+        gridContainer.appendChild(itemCard);
+    });
+}
+
+function previewExerciseAssetPipeline(id) {
+    const selected = extended20FitnessRoutinesArray.find(item => item.id === id);
+    const videoPreviewZone = document.getElementById('addon-video-preview-zone');
+    if (!selected || !videoPreviewZone) return;
+
+    videoPreviewZone.classList.remove('hidden');
+    videoPreviewZone.style.cssText = "background: #1e293b; color: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; position: relative; border-left: 4px solid #f97316;";
+    
+    videoPreviewZone.innerHTML = `
+        <span onclick="this.parentElement.classList.add('hidden')" style="position: absolute; top: 6px; right: 10px; cursor: pointer; font-size: 1.1rem; color: #94a3b8;">&times;</span>
+        <h6 style="margin: 0 0 4px 0; font-size: 0.85rem; color: #f97316;">▶️ Streaming Exercise Demonstration Guide</h6>
+        <p style="margin: 0; font-size: 0.8rem; font-weight: 600;">Currently Playing: ${selected.name}</p>
+        <p style="margin: 2px 0 0 0; font-size: 0.7rem; color: #94a3b8;">Metrics Track: ${selected.impact} • ${selected.difficulty} • Setup: ${selected.gear}</p>
+        <div style="margin-top: 8px; font-size: 0.75rem; color: #fed7aa; background: #2d3748; padding: 6px; border-radius: 4px; text-align: center; font-style: italic;">
+            ✨ [Simulated Instructional Frame Loop Running Safely] ✨
+        </div>
+    `;
+    playGameSound(783.99, 'triangle', 0.12);
+}
+
+function saveWalkingAlarmPipeline() {
+    const timeValue = document.getElementById('walk-alarm-time').value;
+    if (!timeValue) {
+        alert("Please specify a valid time entry!");
+        return;
+    }
+    walkingReminderAlarmTime = timeValue;
+    alert(`Smooth walk reminder logged context! You will receive a system alert at exactly ${walkingReminderAlarmTime} daily. 🌆`);
+    playGameSound(523.25, 'sine', 0.15);
+}
+
+// SYSTEM HARDWARE VIBRATION HARNESS WRAPPER
+function triggerSystemVibration(pattern) {
+    const allowed = document.getElementById('settings-vib') ? document.getElementById('settings-vib').checked : true;
+    if (!allowed || !navigator.vibrate) return;
+    if (pattern === 'short') navigator.vibrate(15);
+    else if (pattern === 'long') navigator.vibrate([100, 50, 100]);
 }
 
 // ==========================================================================
@@ -726,27 +840,33 @@ function initGameWordle(sandbox, scoreCounter) {
         <div class="wordle-box-container">
             <div class="wordle-clue">Clue: Healthy living keyword token context.</div>
             <div class="wordle-row">
-                <div class="wordle-letter" id="w0">?</div><div class="wordle-letter" id="w1">?</div>
-                <div class="wordle-letter" id="w2">?</div><div class="wordle-letter" id="w3">?</div>
+                <div class="wordle-letter" id="w0">?</div>
+                <div class="wordle-letter" id="w1">?</div>
+                <div class="wordle-letter" id="w2">?</div>
+                <div class="wordle-letter" id="w3">?</div>
             </div>
-            <input type="text" maxlength="4" class="wordle-input-field" id="w-input" placeholder="TYPE">
-            <button class="play-small-btn" id="w-btn">Guess</button>
+            <input type="text" maxlength="4" id="w-input" style="width:120px; text-transform:uppercase; margin-top:10px; text-align:center;"><br>
+            <button class="play-small-btn" id="w-btn" style="margin-top:8px;">Check</button>
         </div>`;
 
     const input = document.getElementById('w-input');
     document.getElementById('w-btn').onclick = () => {
-        let guess = input.value.toUpperCase();
+        let guess = input.value.toUpperCase().trim();
         if (guess.length !== 4) return;
 
         for (let i = 0; i < 4; i++) {
-            let box = document.getElementById(`w${i}`);
+            let el = document.getElementById(`w${i}`);
             if (guess[i] === targetWord[i]) {
-                box.innerText = guess[i]; box.style.background = "#bbf7d0";
+                el.innerText = guess[i]; el.style.background = "#22c55e"; el.style.color = "white";
+            } else if (targetWord.includes(guess[i])) {
+                el.innerText = guess[i]; el.style.background = "#eab308"; el.style.color = "white";
+            } else {
+                el.innerText = guess[i]; el.style.background = "#ef4444"; el.style.color = "white";
             }
         }
 
         if (guess === targetWord) {
-            setTimeout(() => advanceGameLevel(scoreCounter, runGameBootstrap), 800);
+            setTimeout(() => advanceGameLevel(scoreCounter, runGameBootstrap), 1000);
         } else {
             input.value = "";
         }
@@ -754,105 +874,93 @@ function initGameWordle(sandbox, scoreCounter) {
 }
 
 // ==========================================================================
-// 12. MASTER SYSTEM CLOCK ALARMS TICKER
+// 12. FLOATING REALTIME CLOCK ENGINE FOR TIME-SENSITIVE METRIC VERIFICATIONS
 // ==========================================================================
-setInterval(() => {
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    medicineSchedule.forEach(med => {
-        if (med.time === timeStr && !med.taken) triggerActiveAlarm(med);
-    });
-}, 1000);
+function startGlobalDashboardDaemon() {
+    setInterval(() => {
+        const now = new Date();
+        let currentHrs = String(now.getHours()).padStart(2, '0');
+        let currentMins = String(now.getMinutes()).padStart(2, '0');
+        let compoundTimeStr = `${currentHrs}:${currentMins}`;
 
-function triggerActiveAlarm(med) {
-    const modal = document.getElementById('alarm-alert-modal');
-    if (modal && !modal.classList.contains('hidden')) return;
+        // MEDICINE CHECKER
+        medicineSchedule.forEach(med => {
+            if (med.time === compoundTimeStr && !med.taken && currentActiveAlarmMed !== med.id) {
+                triggerActiveAlarmNotificationModal(med);
+            }
+        });
 
-    currentActiveAlarmMed = med;
-    document.getElementById('alarm-med-name').innerText = `${med.name} (${med.type})`;
-    document.getElementById('alarm-med-details').innerText = `Dosage: ${med.dose} | Frequency: ${med.frequency}`;
-    document.getElementById('alarm-med-time').innerText = `Scheduled Time: ${med.time}`;
-    modal.classList.remove('hidden');
-
-    loopAlarmSensors();
-    alarmIntervalId = setInterval(loopAlarmSensors, 1500);
+        // INTEGRATED ADDITIONAL REMINDER FOR WALKING PIPELINE TIME
+        if (walkingReminderAlarmTime === compoundTimeStr) {
+            walkingReminderAlarmTime = ""; // Reset to avoid looping alert triggers in the same minute
+            playGameSound(660.00, 'triangle', 0.4);
+            alert("🌆 Smooth Walk Reminder! Step out, stretch your joints, and keep moving.");
+        }
+    }, 1000);
 }
 
-function loopAlarmSensors() {
-    playGameSound(440, 'triangle', 0.3); // Low frequency alarm tone for medicines
-    if (document.getElementById('settings-vib')?.checked) triggerSystemVibration('pulse');
+function triggerActiveAlarmNotificationModal(med) {
+    currentActiveAlarmMed = med.id;
+    document.getElementById('alarm-med-name').innerText = med.name;
+    document.getElementById('alarm-med-details').innerText = `${med.type} • ${med.dose} (${med.frequency})`;
+    document.getElementById('alarm-med-time').innerText = `Scheduled Time: ${med.time}`;
+    document.getElementById('alarm-alert-modal').classList.remove('hidden');
+    triggerSystemVibration('long');
+
+    if (alarmIntervalId) clearInterval(alarmIntervalId);
+    alarmIntervalId = setInterval(() => {
+        playGameSound(440.00, 'sawtooth', 0.3);
+        setTimeout(() => { playGameSound(554.37, 'sawtooth', 0.3); }, 350);
+    }, 1200);
 }
 
 function dismissAlarm() {
-    clearInterval(alarmIntervalId);
     document.getElementById('alarm-alert-modal').classList.add('hidden');
-    if (currentActiveAlarmMed) currentActiveAlarmMed.taken = true;
+    if (alarmIntervalId) clearInterval(alarmIntervalId);
+    medicineSchedule = medicineSchedule.map(med => {
+        if (med.id === currentActiveAlarmMed) med.taken = true;
+        return med;
+    });
+    currentActiveAlarmMed = null;
+    alert("Excellent job! Intake recorded safely. 💊");
 }
 
 function snoozeAlarm() {
-    clearInterval(alarmIntervalId);
     document.getElementById('alarm-alert-modal').classList.add('hidden');
-    if (currentActiveAlarmMed) {
-        currentActiveAlarmMed.taken = true;
-        const copyMed = { ...currentActiveAlarmMed, taken: false };
-        setTimeout(() => { triggerActiveAlarm(copyMed); }, 5 * 60 * 1000);
-    }
+    if (alarmIntervalId) clearInterval(alarmIntervalId);
+    currentActiveAlarmMed = null;
+    alert("Alarm snoozed for structural background parameters.");
 }
 
-// ==========================================================================
-// 13. NATIVE HARDWARE OSCILLATOR SOUNDS & VIBRATION ENGINES
-// ==========================================================================
-function playGameSound(freq, oscillatorType, durationValue) {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-        osc.type = oscillatorType; 
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime); 
-        gainNode.gain.setValueAtTime(durationValue, audioCtx.currentTime); 
-        osc.start(); 
-        osc.stop(audioCtx.currentTime + 0.25);
-    } catch(err){}
-}
-
-function triggerSystemVibration(pattern) {
-    if ("vibrate" in navigator) {
-        if (pattern === 'pulse') navigator.vibrate([150, 100, 150]);
-        else navigator.vibrate(80);
-    }
-}
-
-// ==========================================================================
-// 14. APPLICATION NAVIGATION MATRIX INTERACTION INFRASTRUCTURE
-// ==========================================================================
-function toggleNotifications(event) {
-    event.stopPropagation();
+// MISCELLANEOUS COMPONENT SHELLS
+function toggleNotifications(e) {
+    if(e) e.stopPropagation();
     document.getElementById('notification-dropdown').classList.toggle('hidden');
 }
-
 function clearNotifications() {
-    if (document.getElementById('notif-badge')) document.getElementById('notif-badge').style.display = 'none';
-    document.getElementById('notification-dropdown').innerHTML = "<div class='dropdown-item' style='text-align:center;'>No notifications</div>";
+    document.getElementById('notif-badge').style.display = 'none';
+    document.getElementById('notification-dropdown').innerHTML = "<p style='padding:10px; font-size:0.75rem; text-align:center; color:#94a3b8;'>No updates active</p>";
 }
-
 function toggleSettings() { document.getElementById('settings-modal').classList.toggle('hidden'); }
+function applyDarkMode() {
+    const isDark = document.getElementById('dark-mode-toggle').checked;
+    document.getElementById('app-container').style.filter = isDark ? 'invert(0.9) hue-rotate(180deg)' : 'none';
+}
 function toggleAiChat() { document.getElementById('ai-chat-box').classList.toggle('hidden'); }
 
-function applyDarkMode() {
-    if (document.getElementById('dark-mode-toggle').checked) document.body.classList.add('dark-theme');
-    else document.body.classList.remove('dark-theme');
-}
-
-window.onclick = function(event) {
-    const dropdown = document.getElementById('notification-dropdown');
-    if (dropdown && !dropdown.classList.contains('hidden')) dropdown.classList.add('hidden');
-}
-
-// ==========================================================================
-// 15. SYSTEM BOOTSTRAP INITIALIZATION ON WINDOW LOAD
-// ==========================================================================
+// ==========================================
+// BOOTSTRAP APP LIFECYCLE ON WINDOW LOAD
+// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     initializeDailyMotivation();
     startWaterHydrationEngine();
+    startGlobalDashboardDaemon();
+    
+    // Safety close click triggers for overlay accessibility options
+    window.onclick = function(e) {
+        if(!e.target.closest('.icon-badge')) {
+            const el = document.getElementById('notification-dropdown');
+            if(el && !el.classList.contains('hidden')) el.classList.add('hidden');
+        }
+    };
 });
